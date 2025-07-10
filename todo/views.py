@@ -49,6 +49,7 @@ def delete(request, task_id):
     return redirect(index)
 
 def update(request, task_id):
+    task = Task.objects.get(pk=task_id)
     if request.method == 'POST':
         task.title = request.POST['title']
         task.due_at = make_aware(parse_datetime(request.POST['due_at']))
