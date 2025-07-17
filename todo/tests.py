@@ -180,10 +180,32 @@ class TodoViewTestCase(TestCase):
         self.assertEqual(Task.objects.count(), 0)
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/')  # index へリダイレクト
+        self.assertEqual(response.url, '/')
 
     def test_delete_fail(self):
         client = Client()
         response = client.get('/999/delete')
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_close_success(self):
+        task = Task.objects.create(
+            title='Incomplete Task',
+            completed=False,
+            due_at=timezone.make_aware(datetime(2024, 7, 17))
+        )
+
+        client = Client()
+        response = client.get(f'/{task.pk}/close')
+
+        task.refresh_from_db()
+        self.assertTrue(task.completed)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/')
+
+    def test_close_fail(self):
+        client = Client()
+        response = client.get('/999/close')
 
         self.assertEqual(response.status_code, 404)
