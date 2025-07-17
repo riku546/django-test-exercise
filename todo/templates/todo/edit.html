@@ -6,9 +6,10 @@
     <title>To Do Application</title>
     <meta charset="UTF-8">
     <meta name="author" content="INIAD">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/edit.css' %}">
 </head>
 
-<body>
+<body{% if success %} class="success"{% endif %}>
     <h1>Edit task</h1>
     <p> You can edit tasks from the following form.</p>
     <form action="{% url 'update' task.id%}" method="post">
@@ -20,6 +21,14 @@
         <div>
             <label for="dueInput">Due at:</label><br>
             <input id="dueInput" name="due_at" type="datetime-local" value="{{ task.due_at|date:"Y-m-d H:i" }}">
+        </div>
+        <div>
+            <label for="priorityInput">Priority</label><br>
+            <select id="priorityInput" name="priority">
+                <option value="1" {% if task.priority == 1 %}selected{% endif %}>Low</option>
+                <option value="2" {% if task.priority == 2 %}selected{% endif %}>Middle</option>
+                <option value="3" {% if task.priority == 3 %}selected{% endif %}>High</option>
+            </select>
         </div>
         <div>
             <button type="submit">Submit</button>

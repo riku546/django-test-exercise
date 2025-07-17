@@ -8,6 +8,13 @@ class Task(models.Model):
     completed = models.BooleanField(default=False)
     posted_at = models.DateTimeField(default=timezone.now)
     due_at = models.DateTimeField(null=True, blank=True)
+    num_like = models.IntegerField(default=0)
+    PRIORITY_CHOICES = [
+        (1, 'Low'),
+        (2, 'Middle'),
+        (3, 'High'),
+    ]
+    priority = models.IntegerField(choices=PRIORITY_CHOICES, default=2)
 
     def is_overdue(self, dt):
         if self.due_at is None:
