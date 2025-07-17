@@ -25,17 +25,24 @@
         <label for="dueInput">Due at:</label><br>
         <input id="dueInput" name="due_at" type="datetime-local">
       </div>
-
-
-        <div>
-          <button type="submit">Submit</button>
-        </div>
+      <div>
+        <label for="priority">Priority</label>
+        <select name="priority" id ="priority">
+          <option value="1">Low</option>
+          <option value="2">Middle</option>
+          <option value="3">High</option>
+        </select>
+      </div>
+      <div>
+        <button type="submit">Submit</button>
+      </div>
     </form>
     <br>
 
     <div>
       <a href="{% url 'index' %}?order=due">Sort by Due Date</a> |
       <a href="{% url 'index' %}?order=post">Sort by Posted Date</a>
+      <a href="{% url 'index' %}?order=priority">Sort by Priority</a>
     </div>
 
     {% for task in tasks %}
@@ -46,7 +53,12 @@
         {% if task.due_at %}
         <li>Due at: {{ task.due_at }}</li>
         {% endif %}
-        {% if task.completed %}
+
+        {% if task.priority %}
+        <li>Priority: {{ task.priority }}</li>
+        {% endif %}
+        {% if task.completed %} 
+
         <li>Status: Completed</li>
         {% else %}
         <li>Status: Not Completed</li>
