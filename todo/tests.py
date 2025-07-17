@@ -166,3 +166,24 @@ class TodoViewTestCase(TestCase):
         # リダイレクト先が detail ページ
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, f'/{task.pk}/')
+
+    def test_delete_success(self):
+        task = Task.objects.create(
+            title='Task to be deleted',
+            due_at=timezone.make_aware(datetime(2024, 7, 17))
+        )
+
+        client = Client()
+        response = client.get(f'/{task.pk}/delete')
+
+        # 削除されたかを確認
+        self.assertEqual(Task.objects.count(), 0)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/')  # index へリダイレクト
+
+    def test_delete_fail(self):
+        client = Client()
+        response = client.get('/999/delete')
+
+        self.assertEqual(response.status_code, 404)
