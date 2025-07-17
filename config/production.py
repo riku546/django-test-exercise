@@ -12,5 +12,5 @@ DATABASES = {
     'default': dj_database_url.config()
 }
 
-STATIC_ROOT = os.path.join(BASE_DIR / 'todo' /'static/')
+STATIC_ROOT = os.path.join(BASE_DIR / 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
