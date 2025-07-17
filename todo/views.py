@@ -61,6 +61,13 @@ def update(request, task_id):
     }
     return render(request, "todo/edit.html", context)
 
+def update_like(request, task_id):
+    if request.method == 'POST':
+        task = Task.objects.get(pk=task_id)
+        task.num_like += 1
+        task.save()
+    
+    return redirect(index)
 
 def close(request, task_id):
     try:

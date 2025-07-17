@@ -2,12 +2,15 @@
 <!DOCTYPE html>
 <html lang="ja">
 
-  <head>
-    <title>To Do Application</title>
-    <meta charset="UTF-8">
-    <meta name="author" content="INIAD">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-  </head>
+<head>
+  <title>To Do Application</title>
+  <meta charset="UTF-8">
+  <meta name="author" content="INIAD">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+
+<body>  
+
 
   <body>
     <h1>Sample To Do Application</h1>
@@ -22,9 +25,11 @@
         <label for="dueInput">Due at:</label><br>
         <input id="dueInput" name="due_at" type="datetime-local">
       </div>
-      <div>
-        <button type="submit">Submit</button>
-      </div>
+
+
+        <div>
+          <button type="submit">Submit</button>
+        </div>
     </form>
     <br>
 
@@ -34,19 +39,26 @@
     </div>
 
     {% for task in tasks %}
-    <div class="text{% if task.completed %} completed{% endif %}">
+    <div class="text">
       <h2><a href="{% url 'detail' task.id %}">{{ task.title }}</a></h2>
       <ul>
         <li>Posted at: {{ task.posted_at }}</li>
-        {% if task.due_at %} 
+        {% if task.due_at %}
         <li>Due at: {{ task.due_at }}</li>
         {% endif %}
-        {% if task.completed %} 
+        {% if task.completed %}
         <li>Status: Completed</li>
         {% else %}
         <li>Status: Not Completed</li>
         {% endif %}
       </ul>
+      <form action="{% url 'like' task.id %}" method="post">
+        {% csrf_token %}
+        <p>{{ task.num_like }}</p>
+        <button type="submit">
+          <img src="{% static 'img/like_14272290.png' %}" alt="Like">
+        </button>
+      </form>
     </div>
     {% endfor %}
   </body>
