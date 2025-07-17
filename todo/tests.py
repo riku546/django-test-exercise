@@ -131,3 +131,38 @@ class TodoViewTestCase(TestCase):
         response = client.get('/1/')
         
         self.assertEqual(response.status_code, 404)
+
+    def test_update_get(self):
+        task = Task.objects.create(
+            title='Old Title',
+            due_at=timezone.make_aware(datetime(2024, 7, 1))
+        )
+        client = Client()
+        response = client.get(f'/{task.pk}/update')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, 'todo/edit.html')
+        self.assertEqual(response.context['task'], task)
+
+    def test_update_post(self):
+        task = Task.objects.create(
+            title='Old Title',
+            due_at=timezone.make_aware(datetime(2024, 7, 1))
+        )
+
+        # 更新内容
+        updated_data = {
+            'title': 'Updated Title',
+            'due_at': '2024-08-01 12:00:00'
+        }
+
+        client = Client()
+        response = client.post(f'/{task.pk}/update', updated_data)
+
+        task.refresh_from_db()
+        self.assertEqual(task.title, 'Updated Title')
+        self.assertEqual(task.due_at, timezone.make_aware(datetime(2024, 8, 1, 12, 0, 0)))
+
+        # リダイレクト先が detail ページ
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, f'/{task.pk}/')
