@@ -209,3 +209,20 @@ class TodoViewTestCase(TestCase):
         response = client.get('/999/close')
 
         self.assertEqual(response.status_code, 404)
+
+    def test_index_get_order_priority(self):
+        task_low = Task.objects.create(title='Low Priority Task', priority=1)
+        task_mid = Task.objects.create(title='Middle Priority Task', priority=2)
+        task_high = Task.objects.create(title='High Priority Task', priority=3)
+
+        client = Client()
+        response = client.get('/?order=priority')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, 'todo/index.html')
+
+        # タスクリストが priority 降順（3,2,1）になっているかを確認
+        expected_order = [task_high, task_mid, task_low]
+        actual_order = list(response.context['tasks'])
+
+        self.assertEqual(actual_order, expected_order)
